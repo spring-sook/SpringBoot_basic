@@ -4,6 +4,7 @@ import com.kh.springJpa241217.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository // 스프링 컨테이너에 등록해줌 -> 이 객체가 싱글톤으로 등록됨 - 단 하나의 객체만 만들어서 대여(?)의 목적으로...
@@ -13,4 +14,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> { // CRUD 
     Optional<Member> findByEmail(String email); // 이메일을 이용해서 해당하는 객체를 반환. null일때를 위해 Optional
     Optional<Member> findByPwd(String pwd);
     Optional<Member> findByEmailAndPwd(String email, String pwd); // WHERE문 2개인거임
+    List<Member> findAll();
 }
