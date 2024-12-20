@@ -7,6 +7,7 @@ import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class BoardReqDto {
+    private Long boardId;
     private String title;
     private String content;
     private String imgPath;
