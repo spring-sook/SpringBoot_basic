@@ -1,15 +1,19 @@
 package com.kh.springJpa241217.service;
 
+import com.kh.springJpa241217.dto.BoardResDto;
 import com.kh.springJpa241217.dto.MemberReqDto;
 import com.kh.springJpa241217.dto.MemberResDto;
+import com.kh.springJpa241217.entity.Board;
 import com.kh.springJpa241217.entity.Member;
 import com.kh.springJpa241217.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -65,6 +69,18 @@ public class MemberService {
         }
     }
 
+    // 특정 회원이 작성한 게시글 목록
+    public MemberResDto getMemberBoards(Long id) {
+        try{
+            Member member = memberRepository.findById(id)
+                    .orElseThrow(()->new RuntimeException("해당 회원이 존재하지 않습니다."));
+            return convertEntityToDtoWithBoard(member);
+        } catch (Exception e) {
+            log.error("특정 회원 게시물 조회 오류 : {}", e.getMessage());
+            return null;
+        }
+    }
+
     // Member Entity => MemberResDto 변환
     private MemberResDto convertEntityToDto(Member member) {
         MemberResDto memberResDto = new MemberResDto();
@@ -72,6 +88,27 @@ public class MemberService {
         memberResDto.setName(member.getName());
         memberResDto.setRegDate(member.getRegDate());
         memberResDto.setImgPath(member.getImgPath());
+        return memberResDto;
+    }
+    private MemberResDto convertEntityToDtoWithBoard(Member member) {
+        MemberResDto memberResDto = new MemberResDto();
+        memberResDto.setEmail(member.getEmail());
+        memberResDto.setName(member.getName());
+        memberResDto.setRegDate(member.getRegDate());
+        memberResDto.setImgPath(member.getImgPath());
+
+        List<BoardResDto> boardResDtoList = new ArrayList<>();
+        for (Board board : member.getBoards()) {
+            BoardResDto boardResDto = new BoardResDto();
+            boardResDto.setBoardId(board.getId());
+            boardResDto.setTitle(board.getTitle());
+            boardResDto.setContent(board.getContent());
+            boardResDto.setImgPath(board.getImgPath());
+            boardResDto.setRegDate(board.getRegDate());
+            boardResDtoList.add(boardResDto);
+        }
+
+        memberResDto.setBoards(boardResDtoList);
         return memberResDto;
     }
 }

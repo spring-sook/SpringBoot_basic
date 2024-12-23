@@ -1,5 +1,6 @@
 package com.kh.springJpa241217.controller;
 
+import com.kh.springJpa241217.dto.BoardResDto;
 import com.kh.springJpa241217.dto.MemberReqDto;
 import com.kh.springJpa241217.dto.MemberResDto;
 import com.kh.springJpa241217.service.MemberService;
@@ -42,5 +43,12 @@ public class MemberController {
     public ResponseEntity<Boolean> deleteMember(@PathVariable String email) {
         boolean isSuccess = memberService.deleteMember(email);
         return ResponseEntity.ok(isSuccess);
+    }
+
+    // 특정 회원 게시물 조회
+    @GetMapping("/boards/{id}")
+    public ResponseEntity<MemberResDto> memberBoards(@PathVariable Long id) {
+        MemberResDto memberResDto = memberService.getMemberBoards(id);
+        return ResponseEntity.ok(memberResDto);
     }
 }

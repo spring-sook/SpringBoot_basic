@@ -1,5 +1,6 @@
 package com.kh.springJpa241217.entity;
 
+import com.kh.springJpa241217.dto.CommentResDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,8 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // 게시글에 관한 Entity
 @Entity
@@ -34,4 +37,7 @@ public class Board {
     @ManyToOne // N:1 관계
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "board") // 주인이 아님을 의미. 즉, 객체를 참조만 함
+    private List<Comment> comments;
 }
