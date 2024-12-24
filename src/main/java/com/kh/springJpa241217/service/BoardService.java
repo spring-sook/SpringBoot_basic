@@ -2,6 +2,7 @@ package com.kh.springJpa241217.service;
 
 import com.kh.springJpa241217.dto.BoardReqDto;
 import com.kh.springJpa241217.dto.BoardResDto;
+import com.kh.springJpa241217.dto.CommentReqDto;
 import com.kh.springJpa241217.dto.CommentResDto;
 import com.kh.springJpa241217.entity.Board;
 import com.kh.springJpa241217.entity.Comment;
@@ -179,6 +180,54 @@ public class BoardService {
         }catch (Exception e) {
             log.error("게시글에 대한 댓글 조회 실패 : {}", e.getMessage());
             return null;
+        }
+    }
+
+    // 영속성 제거/고아객체제거 예제를 위한 코드
+    @Transactional // 중간에 실패하면 자동 롤백
+    public boolean addComment(Long boardId, CommentReqDto commentReqDto) {
+        try {
+            // id로 board 객체 가져오기
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+            // email로 member 객체 가져오기
+            Member member = memberRepository.findByEmail(commentReqDto.getEmail())
+                    .orElseThrow(() -> new RuntimeException("회원 정보가 존재하지 않습니다."));
+            // Dto -> Entity로 변환
+            Comment comment = new Comment();
+            comment.setContent(commentReqDto.getContent());
+            comment.setMember(member);
+            comment.setBoard(board);
+            board.addComment(comment);
+            boardRepository.save(board);
+            return true;
+        } catch (Exception e) {
+            log.error("댓글 추가 실패 : {}", e.getMessage());
+            return false;
+        }
+    }
+    @Transactional
+    public boolean removeComment(Long boardId, Long commentId) {
+        try {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+            Comment targetComment = null; // 지울 댓글에 대한 변수 생성
+            for (Comment comment : board.getComments()) {
+                log.warn(comment.toString());
+                if (comment.getCommentId().equals(commentId)) {
+                    targetComment = comment;
+                    break;
+                }
+            }
+            if (targetComment == null) {
+                log.error("해당 댓글이 존재하지 않습니다.");
+            }
+            board.removeComment(targetComment);
+            boardRepository.save(board);
+            return true;
+        } catch (Exception e) {
+            log.error("댓글 제거 실패 : {}", e.getMessage());
+            return false;
         }
     }
 

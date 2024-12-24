@@ -41,6 +41,8 @@ public class Member {
     }
 
     // 게시글 목록에 대한 OneToMany
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boards;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList;
 }

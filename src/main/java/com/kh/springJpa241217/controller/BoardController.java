@@ -2,6 +2,7 @@ package com.kh.springJpa241217.controller;
 
 import com.kh.springJpa241217.dto.BoardReqDto;
 import com.kh.springJpa241217.dto.BoardResDto;
+import com.kh.springJpa241217.dto.CommentReqDto;
 import com.kh.springJpa241217.entity.Board;
 import com.kh.springJpa241217.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -75,5 +76,18 @@ public class BoardController {
                                                            @RequestParam(defaultValue = "10") int size) {
         List<BoardResDto> list = boardService.pagingBoardList(page, size);
         return ResponseEntity.ok(list);
+    }
+
+    // 댓글 추가
+    @PostMapping("/{boardId}/comments")
+    public ResponseEntity<Boolean> addComment(@PathVariable Long boardId, @RequestBody CommentReqDto commentReqDto) {
+        boolean isSuccess = boardService.addComment(boardId, commentReqDto);
+        return ResponseEntity.ok(isSuccess);
+    }
+    // 댓글 제거
+    @DeleteMapping("/{boardId}/comments/{commentId}")
+    public ResponseEntity<Boolean> deleteComment(@PathVariable Long boardId, @PathVariable Long commentId) {
+        boolean isSuccess = boardService.removeComment(boardId, commentId);
+        return ResponseEntity.ok(isSuccess);
     }
 }
