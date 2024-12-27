@@ -97,18 +97,18 @@ public class MemberService {
         memberResDto.setRegDate(member.getRegDate());
         memberResDto.setImgPath(member.getImgPath());
 
-        List<BoardResDto> boardResDtoList = new ArrayList<>();
-        for (Board board : member.getBoards()) {
-            BoardResDto boardResDto = new BoardResDto();
-            boardResDto.setBoardId(board.getId());
-            boardResDto.setTitle(board.getTitle());
-            boardResDto.setContent(board.getContent());
-            boardResDto.setImgPath(board.getImgPath());
-            boardResDto.setRegDate(board.getRegDate());
-            boardResDtoList.add(boardResDto);
-        }
+//        List<BoardResDto> boardResDtoList = new ArrayList<>();
+//        for (Board board : member.getBoards()) {
+//            BoardResDto boardResDto = new BoardResDto();
+//            boardResDto.setBoardId(board.getId());
+//            boardResDto.setTitle(board.getTitle());
+//            boardResDto.setContent(board.getContent());
+//            boardResDto.setImgPath(board.getImgPath());
+//            boardResDto.setRegDate(board.getRegDate());
+//            boardResDtoList.add(boardResDto);
+//        }
 
-        memberResDto.setBoards(boardResDtoList);
+//        memberResDto.setBoards(boardResDtoList);
         return memberResDto;
     }
 }

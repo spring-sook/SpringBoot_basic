@@ -1,7 +1,10 @@
 package com.kh.springJpa241217.controller;
 
+import antlr.Token;
 import com.kh.springJpa241217.dto.LoginReqDto;
 import com.kh.springJpa241217.dto.MemberReqDto;
+import com.kh.springJpa241217.dto.MemberResDto;
+import com.kh.springJpa241217.dto.TokenDto;
 import com.kh.springJpa241217.entity.Member;
 import com.kh.springJpa241217.service.AuthService;
 import lombok.Getter;
@@ -30,16 +33,14 @@ public class AuthController {
 
     // 회원 가입
     @PostMapping("/signup")
-    public ResponseEntity<Boolean> signUp(@RequestBody MemberReqDto memberReqDto) {
-        boolean isSuccess = authService.signUp(memberReqDto);
-        return ResponseEntity.ok(isSuccess);
+    public ResponseEntity<MemberResDto> signUp(@RequestBody MemberReqDto memberReqDto) {
+        return ResponseEntity.ok(authService.signUp(memberReqDto));
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody LoginReqDto loginReqDto) {
-        boolean isSuccess = authService.login(loginReqDto);
-        return ResponseEntity.ok(isSuccess);
+    public ResponseEntity<TokenDto> login(@RequestBody MemberReqDto memberReqDto) {
+        return ResponseEntity.ok(authService.login(memberReqDto));
     }
 
 //    // 전체 회원 조회

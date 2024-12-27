@@ -1,5 +1,6 @@
 package com.kh.springJpa241217.entity;
 
+import com.kh.springJpa241217.constant.Authority;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ public class Member {
     @Column(nullable = false, length = 50) // not null, null값이 올수 없다는 제약 조건
     private String email;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String pwd;
 
     @Column(length =  50)
@@ -35,14 +36,27 @@ public class Member {
     @Column(name = "image_path")
     private String imgPath;
 
-    @PrePersist // JPA의 콜백 메서드로 엔티티가 저자오디기 전에 실행, DB에 데이터가 삽입되기 전에 자동 설정
-    protected void onCreate() {
-        this.regDate = LocalDateTime.now();
-    }
+//    @PrePersist // JPA의 콜백 메서드로 엔티티가 저자오디기 전에 실행, DB에 데이터가 삽입되기 전에 자동 설정
+//    protected void onCreate() {
+//        this.regDate = LocalDateTime.now();
+//    }
 
     // 게시글 목록에 대한 OneToMany
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boards;
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
+    @Builder
+    public Member(String email, String name, String pwd, String img, Authority authority) {
+        this.email = email;
+        this.pwd = pwd;
+        this.name = name;
+        this.imgPath = img;
+        this.authority = authority;
+        this.regDate = LocalDateTime.now();
+    }
 }
