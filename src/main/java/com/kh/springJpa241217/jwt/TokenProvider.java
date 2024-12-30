@@ -46,6 +46,7 @@ public class TokenProvider {
         // 현재 시간과 토큰 만료 시간 계산
         long now = (new Date()).getTime();
         Date accessTokenExpiresIn = new Date(now + 30 * 60 * 1000); // 30분
+        Date refreshTokenExpiresIn = new Date(now + 30 * 60 * 1000 * 48 * 6); // 6일
 
         // Access Token 생성
         String accessToken = Jwts.builder()
@@ -55,11 +56,21 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512) // 서명 방식 설정
                 .compact();
 
+        // Refresh Token 생성
+        String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName()) // 사용자명 설정
+                .claim(AUTHORITIES_KEY, authorities)  // 권한 정보 저장
+                .setExpiration(refreshTokenExpiresIn)  // 만료 시간 설정
+                .signWith(key, SignatureAlgorithm.HS512) // 서명 방식 설정
+                .compact();
+
         // 결과를 DTO로 반환
         return TokenDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .tokenExpiresIn(accessTokenExpiresIn.getTime())
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken) // 리프레시 토큰
+                .refreshTokenExpiresIn(refreshTokenExpiresIn.getTime()) // 리프레시 토큰 만료 시간
                 .build();
     }
 

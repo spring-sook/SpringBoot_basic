@@ -22,10 +22,13 @@ public class MemberController {
     // 전체/특정 회원 조회
     @GetMapping("/getInfo")
     public ResponseEntity<Object> getInfo(@RequestParam(required = false) String email) {
+        log.error("회원 조회 요청 수신");
         if (email == null || email.isEmpty()) {
+            log.error("전체 회원 조회 요청 수신");
             List<MemberResDto> members = memberService.getMemberList();
             return ResponseEntity.ok(members);
         } else {
+            log.error("특정 회원 조회 요청 수신");
             MemberResDto member = memberService.getMemberDetail(email);
             return ResponseEntity.ok(member);
         }
